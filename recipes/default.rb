@@ -28,4 +28,18 @@ template "/etc/monit/monitrc" do
   notifies :restart, resources(:service => "monit"), :immediate
 end
 
+directory '/etc/monit/conf.d' do
+  owner "root"
+  group "root"
+  mode 00755
+end
 
+template "/etc/monit/conf.d/system.conf" do
+  owner "root"
+  group "root"
+  mode 00644
+  variables(
+    hostname: node['fqdn'],
+    alerts: node[:monit][:check_system][:alerts]
+  )
+end

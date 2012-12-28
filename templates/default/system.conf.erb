@@ -1,0 +1,4 @@
+check system <%= @hostname %>
+<% @alerts.each do |condition| -%>
+  if <%= condition %> then alert
+<%- end -%>
