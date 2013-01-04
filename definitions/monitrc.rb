@@ -4,7 +4,7 @@
 # template_cookbook: the cookbook in which the configuration resides
 # template_source: filename of the ERB configuration template, defaults to <LWRP Name>.conf.erb
 define :monitrc, :action => :enable, :reload => :delayed, :variables => {}, :template_cookbook => nil, :template_source => nil do
-  params[:template_source] ||= "monit.#{params[:name]}.erb"
+  params[:template_source] ||= "etc/monit/#{params[:name]}.erb"
   if params[:action] == :enable
     template "/etc/monit/conf.d/#{params[:name]}.conf" do
       owner "root"
