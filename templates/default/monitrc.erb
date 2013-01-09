@@ -12,8 +12,8 @@ set mailserver <%= @node[:monit][:mailserver][:hostname] %><%= " port #{@node[:m
 <% if @node[:monit][:mailserver][:password] %>
   password "<%= @node[:monit][:mailserver][:password] %>"<%= " #{@node[:monit][:mailserver][:password_suffix]}" if @node[:monit][:mailserver][:password_suffix] %>
 <% end %>
-<% if @node[:monit][:mailserver][:use_tls] %>
-  using tlsv1
+<% if @node[:monit][:mailserver][:using] %>
+  using <%= @node[:monit][:mailserver][:using].upcase %>
 <% end %>
 
 
@@ -28,7 +28,9 @@ set mail-format {
 }
 
 <% if !! @node[:monit][:enable_email] %>
-set alert <%= @node[:monit][:notify_email] %> with reminder on <%= (60.0 / @node[:monit][:poll_period] * @node[:monit][:notify_reminder]).round %> cycles
+set alert <%= @node[:monit][:notify_email] %>
+  on { <%= node.monit.global_alert.events.map(&:to_s).join(', ') %> }
+  with reminder on <%= (60.0 / @node[:monit][:poll_period] * @node[:monit][:notify_reminder]).round %> cycles
 <% end %>
 
 set httpd port <%= node[:monit][:port] %>

@@ -5,6 +5,29 @@ default[:monit][:poll_start_delay]      = 120
 
 default[:monit][:notify_email]          = "notify@example.com"
 default[:monit][:notify_reminder]       = 10 # remind every X minutes
+default[:monit][:global_alert][:events] = [
+  # :action,
+  :checksum,
+  :connection,
+  :content,
+  :data,
+  :exec,
+  :fsflags,
+  :gid,
+  :icmp,
+  # :instance,
+  :invalid,
+  :nonexist,
+  :permission,
+  # :pid,
+  # :ppid,
+  :resource,
+  :size,
+  # :status,
+  :timeout,
+  :timestamp,
+  :uid
+]
 
 default[:monit][:mail_format][:subject] = "$SERVICE $EVENT"
 default[:monit][:mail_format][:from]    = "monit@#{node['fqdn']}"
@@ -20,7 +43,7 @@ default[:monit][:mailserver][:port] = nil
 default[:monit][:mailserver][:username] = nil
 default[:monit][:mailserver][:password] = nil
 default[:monit][:mailserver][:password_suffix] = nil
-default[:monit][:mailserver][:use_tls] = false
+default[:monit][:mailserver][:using] = nil
 
 default[:monit][:port] = 3737
 default[:monit][:address] = "0.0.0.0"

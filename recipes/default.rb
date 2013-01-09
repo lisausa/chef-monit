@@ -3,7 +3,7 @@ package "monit" do
 end
 
 execute 'disable init.d/monit in favor of Upstart' do
-  command 'update-rc.d -f monit remove'
+  command '/etc/init.d/monit stop; update-rc.d -f monit remove'
 end
 
 cookbook_file '/etc/init/monit.conf' do
@@ -13,19 +13,13 @@ cookbook_file '/etc/init/monit.conf' do
   mode 0644
 end
 
-service "monit" do
-  action :start
-  enabled true
-  supports [:start, :restart, :stop]
-  provider Chef::Provider::Service::Upstart
-end
 
 template "/etc/monit/monitrc" do
   owner "root"
   group "root"
   mode 0700
   source 'monitrc.erb'
-  notifies :restart, resources(:service => "monit"), :immediate
+  notifies :reload, 'service[monit]'
 end
 
 directory '/etc/monit/conf.d' do
@@ -42,4 +36,12 @@ template "/etc/monit/conf.d/system.conf" do
     hostname: node['fqdn'],
     alerts: node[:monit][:check_system][:alerts]
   )
+  notifies :reload, 'service[monit]'
+end
+
+service "monit" do
+  action :start
+  enabled true
+  supports [:start, :restart, :stop, :reload]
+  provider Chef::Provider::Service::Upstart
 end
